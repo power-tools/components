@@ -4,7 +4,8 @@
 
 import React, { useEffect, useState } from "react";
 import { VirtualizedComboBox } from "office-ui-fabric-react/lib/ComboBox";
-import { IComboBoxOption } from "office-ui-fabric-react/lib/components/ComboBox/ComboBox.types";
+import { IComboBoxOption, IComboBox } from "office-ui-fabric-react/lib/components/ComboBox/ComboBox.types";
+import { IRefObject } from "@uifabric/utilities/lib/createRef";
 
 const listStyle = {
   marginBottom: '20px',
@@ -12,9 +13,11 @@ const listStyle = {
 }
 
 interface IEntityListProps {
+  componentRef?: IRefObject<IComboBox>;
+  onChange?: (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) => void;
   multiSelect: boolean;
   label: string;
-  placehoder: string;
+  placeholder: string;
 }
 
 export const EntityList = (props: IEntityListProps) => {
@@ -37,7 +40,7 @@ export const EntityList = (props: IEntityListProps) => {
     try {
       url = parent.Xrm.Page.context.getClientUrl();
     } catch (error) {
-      url = error;
+      url = "www.google.com";
     }
 
     fetch(
@@ -82,11 +85,13 @@ export const EntityList = (props: IEntityListProps) => {
 
   return (
       <VirtualizedComboBox
+        onChange={props.onChange}
+        componentRef={props.componentRef}
         style={listStyle}
         options={options}
         autoComplete="on"
         multiSelect={props.multiSelect}
-        placeholder={props.placehoder}
+        placeholder={props.placeholder}
         label={props.label}
       />
   );
